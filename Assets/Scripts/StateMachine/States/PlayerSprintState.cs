@@ -15,7 +15,6 @@ public class PlayerSprintState : BaseState {
     }
 
     public override void ExitState() {
-        PSM._Sprint = false;
         PSM.PlayerCam.m_Lens.FieldOfView -= 5;
         EventBus.OnJump -= Jump;
         EventBus.OnMove -= Move;

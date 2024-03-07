@@ -27,9 +27,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
     [HideInInspector] public Vector3 _movement { get; private set; } = Vector3.zero;
     [HideInInspector] public float _rotationDirection;
-    [HideInInspector] public bool _Jump;
     [HideInInspector] public bool JumpOnCooldown;
-    [HideInInspector] public bool _Sprint;
 
     [HideInInspector] private BaseState currentState;
 
@@ -76,7 +74,7 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void OnJump(InputValue value) {
-        if (!JumpOnCooldown && !_Jump) {
+        if (!JumpOnCooldown) {
             EventBus.Jump();
             StartCoroutine(JumpCooldown());
         }
