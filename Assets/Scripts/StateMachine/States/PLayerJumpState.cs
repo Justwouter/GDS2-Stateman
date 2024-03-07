@@ -21,7 +21,10 @@ public class PlayerJumpState : BaseState {
     private void GroundCheck() {
         if (Physics.Raycast(PSM.transform.position, Vector3.down, out RaycastHit hit, 1, PSM.groundLayer)) {
             Debug.DrawRay(PSM.transform.position, Vector3.down * hit.distance, Color.yellow);
-            PSM.SwitchState("Move");
+            // Check for cooldown to avoid bhopping
+            if (!PSM.JumpOnCooldown) {
+                PSM.SwitchState("Move");
+            }
         }
         else {
             Debug.DrawRay(PSM.transform.position, Vector3.down * 1, Color.white);
