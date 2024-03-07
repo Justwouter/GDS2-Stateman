@@ -13,9 +13,11 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerStateMachine : MonoBehaviour {
     [Header("Refs")]
-    [SerializeField] private TextMeshProUGUI StateIndicator;
+    [SerializeField] private TextMeshProUGUI _stateIndicator;
+    [SerializeField] private GameObject _bullet;
     public LayerMask groundLayer;
     public CinemachineVirtualCamera PlayerCam;
+
 
     [Header("Settings")]
     public float speedMult = 10;
@@ -32,6 +34,10 @@ public class PlayerStateMachine : MonoBehaviour {
     [HideInInspector] private BaseState currentState;
 
     private readonly List<BaseState> _states = new();
+    private void Awake() {
+        EventBus.OnAttack += UseAttack;
+    }
+
     private void Start() {
         _states.AddRange(new List<BaseState>() {
             new PlayerIdleState("Idle", this),
@@ -40,6 +46,11 @@ public class PlayerStateMachine : MonoBehaviour {
             new PlayerJumpState("Jump", this)
             });
         currentState = _states.FirstOrDefault(s => s.Name == "Idle"); // Set the starting state as idle
+        currentState.EnterState();
+    }
+
+    private void OnDestroy() {
+        EventBus.OnAttack -= UseAttack;
     }
 
     public void SwitchState(string name) {
@@ -49,14 +60,15 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void Update() {
-        StateIndicator.SetText(currentState.Name);
+        _stateIndicator.SetText(currentState.Name);
         transform.Rotate(_rotationDirection * rotationSpeed * Time.deltaTime * Vector3.up); // Player can always rotate
         currentState.UpdateState();
     }
 
 
     private void OnMove(InputValue value) {
-        _movement = value.Get<Vector3>();
+        _movement = value.Get<Vector3>(); // Should be replaced but im lazy
+        EventBus.Move(_movement);
     }
 
     private void OnRotate(InputValue inputValue) {
@@ -65,18 +77,22 @@ public class PlayerStateMachine : MonoBehaviour {
 
     private void OnJump(InputValue value) {
         if (!JumpOnCooldown && !_Jump) {
-            _Jump = true;
+            EventBus.Jump();
             StartCoroutine(JumpCooldown());
         }
     }
 
     private void OnSprint(InputValue value) {
-        _Sprint = true;
+        EventBus.Sprint();
     }
 
     IEnumerator JumpCooldown() {
         JumpOnCooldown = true;
         yield return new WaitForSecondsRealtime(0.5f);
         JumpOnCooldown = false;
+    }
+
+    public void UseAttack() {
+
     }
 }

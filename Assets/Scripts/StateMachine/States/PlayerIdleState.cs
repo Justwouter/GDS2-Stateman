@@ -5,17 +5,25 @@ public class PlayerIdleState : BaseState {
     }
 
     public override void EnterState() {
-    }
-
-    public override void ExitState() {
+        EventBus.OnJump += Jump;
+        EventBus.OnMove += Move;
     }
 
     public override void UpdateState() {
-        if (PSM._movement != Vector3.zero) {
+
+    }
+
+    public override void ExitState() {
+        EventBus.OnJump -= Jump;
+        EventBus.OnMove -= Move;
+    }
+
+    private void Move(Vector3 movement) {
+        if (movement != Vector3.zero) {
             PSM.SwitchState("Move");
         }
-        else if (PSM._Jump) {
-            PSM.SwitchState("Jump");
-        }
     }
+    
+
+
 }

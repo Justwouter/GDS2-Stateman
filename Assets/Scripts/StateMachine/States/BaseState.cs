@@ -11,4 +11,13 @@ public abstract class BaseState {
     public abstract void UpdateState();
     public abstract void ExitState();
 
+    protected void Jump() {
+        PSM.SwitchState("Jump");
+    }
+
+    protected void Sprint() {
+        PSM.SwitchState("Sprint");
+
+    }
+
 }

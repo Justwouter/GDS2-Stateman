@@ -26,7 +26,7 @@ public class PlayerJumpState : BaseState {
         if (Physics.Raycast(PSM.transform.position, Vector3.down, out hit, 1, PSM.groundLayer)) {
             Debug.DrawRay(PSM.transform.position, Vector3.down * hit.distance, Color.yellow);
             if (!PSM.JumpOnCooldown) {
-                PSM.SwitchState("Idle");
+                PSM.SwitchState("Move");
             }
         }
         else {

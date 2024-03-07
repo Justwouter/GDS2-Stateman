@@ -5,25 +5,24 @@ public class PlayerMovementState : BaseState {
     }
 
     public override void EnterState() {
+        EventBus.OnSprint += Sprint;
+        EventBus.OnJump += Jump;
+        EventBus.OnMove += Move;
     }
 
     public override void UpdateState() {
         PSM.transform.Translate(PSM.speedMult * Time.deltaTime * PSM._movement);
-
-        
-        if (PSM._Jump) {
-            PSM.SwitchState("Jump");
-        }
-        else if(PSM._Sprint){
-            PSM.SwitchState("Sprint");
-        }
-        else if (PSM._movement == Vector3.zero) {
-            PSM.SwitchState("Idle");
-        }
     }
 
     public override void ExitState() {
+        EventBus.OnSprint -= Sprint;
+        EventBus.OnJump -= Jump;
+        EventBus.OnMove -= Move;
     }
 
-
+    private void Move(Vector3 movement) {
+        if (movement == Vector3.zero) {
+            PSM.SwitchState("Idle");
+        }
+    }
 }
