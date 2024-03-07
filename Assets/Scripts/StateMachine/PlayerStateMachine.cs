@@ -14,9 +14,10 @@ using UnityEngine.InputSystem;
 public class PlayerStateMachine : MonoBehaviour {
     [Header("Refs")]
     [SerializeField] private TextMeshProUGUI _stateIndicator;
-    [SerializeField] private GameObject _bullet;
     public LayerMask groundLayer;
     public CinemachineVirtualCamera PlayerCam;
+    [SerializeField] private GameObject _bullet;
+
 
 
     [Header("Settings")]
@@ -84,6 +85,10 @@ public class PlayerStateMachine : MonoBehaviour {
         EventBus.Sprint();
     }
 
+    private void OnAttack(InputValue value) {
+        EventBus.Attack();
+    }
+
     IEnumerator JumpCooldown() {
         JumpOnCooldown = true;
         yield return new WaitForSecondsRealtime(0.5f);
@@ -91,6 +96,7 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     public void UseAttack() {
-
+        GameObject projectile = Instantiate(_bullet, transform.position + 2 * transform.forward, transform.rotation);
+        projectile.GetComponent<Rigidbody>().AddForce(transform.forward * 100, ForceMode.Impulse);
     }
 }
