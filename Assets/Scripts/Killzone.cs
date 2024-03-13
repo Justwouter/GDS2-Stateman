@@ -11,6 +11,6 @@ public class Killzone : MonoBehaviour {
         FindObjectsOfType<GameObject>() // I Love LINQ queries :)
         .Where(obj => obj.transform.position.y < -10)
         .ToList()
-        .ForEach(obj => obj.transform.position = obj.transform.position + (Vector3.up * 10));
+        .ForEach(obj => obj.transform.position = obj.transform.position + (Vector3.up * 30));
     }
 }
